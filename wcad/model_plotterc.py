@@ -12,10 +12,13 @@
 #
 
 import colorsys
+
+import math
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
 import numpy as np
+import os
 
 from nltk_textgrid.textgrid import *
 
@@ -38,6 +41,81 @@ class ModelPlotterc():
             hue = 1. * hue / ncolor
             col = [int(x) for x in colorsys.hsv_to_rgb(hue, 1.0, 230)]
             yield '#{0:02x}{1:02x}{2:02x}'.format(*col)
+
+    @staticmethod
+    def plot_basic(filename, lf0=None, reconstruction=None, phrase=None, atoms=None):
+        plt.figure(figsize=(16.0, 9.0))
+        gs = gridspec.GridSpec(3, 1, height_ratios=[4, 4, 1])
+        plt.subplots_adjust(hspace=0.35)
+
+        length = 0.0
+        for data in lf0, reconstruction, phrase:
+            if data is not None:
+                length = max(length, len(data))
+        length = 2000.0 if length == 0.0 else length
+        t = np.arange(0, length)
+
+        # if atoms is not None:
+        #     pitch_max_in = atoms[0].pitch_max_in
+        #     pitch_max_out = atoms[-1].pitch_max_out
+        # elif phrase is not None:
+        #     pitch_max_in = phrase[0]
+        #     pitch_max_out = phrase[-1]
+        x_start = 0
+        x_end = t[-1]
+
+        plt.subplot(gs[0])
+        # plt_ymax = np.max([np.max(lf0[pitch_max_in:pitch_max_out]),
+        #                    np.max(phrase.curve[pitch_max_in:pitch_max_out])])
+        # plt_ymin = np.min([np.min(lf0[pitch_max_in:pitch_max_out]),
+        #                    np.min(phrase.curve[pitch_max_in:pitch_max_out])]) - 0.2
+
+        plots = []
+        names = []
+        # Plot lf0 components
+        if lf0 is not None:
+            plt_lf0, = plt.plot(t[:len(lf0)], lf0, 'b', linewidth=3, alpha=0.8)
+            plots.append(plt_lf0)
+            names.append('lf0')
+
+        # Plot phrase component(s)
+        if phrase is not None:
+            plt_phrase, = plt.plot(t[:len(phrase)], phrase, 'r', linewidth=3, alpha=0.8)
+            plots.append(plt_phrase)
+            names.append('phrase comp')
+
+        # Plot reconstruction
+        if reconstruction is not None:
+            plt_recons, = plt.plot(t[:len(reconstruction)], reconstruction, 'm', linewidth=4, alpha=0.8)
+            plots.append(plt_recons)
+            names.append('reconstruction')
+
+        #plt.xlim([x_start, x_end])
+        plt.xlim(xmin=0.0, xmax=length)
+        #plt.ylim([plt_ymin, plt_ymax])
+        plt.ylim(ymin=math.log(60))
+        plt.title(os.path.basename(filename), size=11)
+        plt.ylabel('log(f0)')
+
+        # Add legend.
+        plt.legend(plots, names, loc='best', ncol=3, fontsize=9, frameon=False)
+
+        # Plot atoms
+        plt.subplot(gs[1])
+
+        if atoms is not None:
+            n_atom = len(atoms)
+            color = ModelPlotterc.get_color(n_atom)
+            for atom in atoms:
+                acolor = next(color)
+                plt.plot(t, atom.get_padded_curve(length), color=acolor, linewidth=2.5)
+
+        plt.xlim(xmin=0.0, xmax=length)
+
+        plt.savefig(filename, bbox_inches=0)  # , format='eps', dpi=1000)
+        print 'Figure saved as ', filename
+
+        plt.show()
 
     def plot(self):
 

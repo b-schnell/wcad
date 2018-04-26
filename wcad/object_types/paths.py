@@ -23,7 +23,8 @@ class Paths:
 
         # From Config file
         parser = ConfigParser()
-        parser.read('paths.cfg')
+        pathConfig = (os.path.join(os.getcwd(),'paths.cfg'))
+        parser.read(pathConfig)
         # self.libs_dir = parser.get('BasePaths', 'Libs')
         self.kaldi = parser.get('BasePaths', 'KaldiExtractor')
 

@@ -26,7 +26,6 @@ class Atom:
                  pitch_max_in=None, pitch_max_out=None, phrase_max_out=None):
         self.curve = curve
         self.fs = fs
-        self.amp = amp
         self.position = position
         self.pitch_max_in = pitch_max_in
         self.pitch_max_out = pitch_max_out

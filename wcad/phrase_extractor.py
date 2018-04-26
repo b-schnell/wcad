@@ -255,6 +255,8 @@ class MultiphraseExtractor:
         post_pad_sec = params.mulphras_post_pad_sec
         post_pad = post_pad_sec * params.frame_rate
         for idx, (a, b) in enumerate(phrase_intervals):
+            a = int(a)
+            b = int(b)
             pitch_padded = copy.deepcopy(pitch)
             wave_padded = copy.deepcopy(wave)
             # allow overlapping for all except the last
@@ -298,11 +300,30 @@ class MultiphraseExtractor:
             diffs_sign = np.where(np.diff(np.sign(sub)))[0]
             diff_found = False
             for diff_sign in diffs_sign:
+                # print atom1_padded[diff_sign-10:diff_sign+10]
+                # print atom2_padded[diff_sign-10:diff_sign+10]
                 if atom1_padded[diff_sign] != 0 and atom2_padded[diff_sign] != 0:
                     diff_found = True
                     intersection = diff_sign
                     break
             if not diff_found:
+                # TODO: Does that make sense at all?
+                # a1_idx = diffs_sign[-1]
+                # a2_idx = diffs_sign[-1]
+                # if atom1_padded[a1_idx] != 0:
+                #     while atom2_padded[a2_idx] == 0 and a2_idx < len(atom2_padded):
+                #         a2_idx += 1
+                #     if a2_idx == len(atom2_padded):
+                #         intersection = a1_idx
+                #     else:
+                #         intersection = a2_idx
+                # else:
+                #     while atom1_padded[a1_idx] == 0 and a1_idx >= 0:
+                #         a1_idx += 1
+                #     if a1_idx == 0:
+                #         intersection = a2_idx
+                #     else:
+                #         intersection = a1_idx
                 raise Exception('Cannot find intersection between two phrases')
 
             if params.mulphras_debugging:
@@ -385,6 +406,7 @@ class FixPosPhraseExtractor:
 
         # find maximum pitch within given time after pov_norm goes above 0.5 - this is where we will place the atom
         if self.params.fix_pos_ref_func == 'annotations':
+            print "fix annotations"
             annotations_file = self.paths.textgrid_folder + self.wave.basename + '.TextGrid'
             tiers = TextGrid(open(annotations_file).read())
             for tier in tiers:

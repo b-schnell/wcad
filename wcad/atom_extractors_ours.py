@@ -12,6 +12,7 @@
 #
 
 import time
+import sys
 from .signal_comparer import *
 
 
@@ -49,9 +50,9 @@ class OurAtomExtractor():
         self.paths = paths  #
 
     def extrapolate(self):
-        pre_pad = self.params.atom_ex_pad_pre * self.params.frame_rate
-        post_pad = self.params.atom_ex_pad_post * self.params.frame_rate
-
+        pre_pad = int(self.params.atom_ex_pad_pre * self.params.frame_rate)
+        post_pad = int(self.params.atom_ex_pad_post * self.params.frame_rate)
+        
         self.phrase.curve = np.pad(self.phrase.curve, (pre_pad, post_pad), 'minimum')
         self.pitch.f0 = np.pad(self.pitch.f0, (pre_pad, post_pad), 'minimum')
         self.pitch.f0_log = np.pad(self.pitch.f0_log, (pre_pad, post_pad), 'minimum')
@@ -61,8 +62,8 @@ class OurAtomExtractor():
         self.wave.energy = np.pad(self.wave.energy, (pre_pad, post_pad), 'constant')
 
     def deextrapolate(self, atoms):
-        pre_pad = self.params.atom_ex_pad_pre * self.params.frame_rate
-        post_pad = self.params.atom_ex_pad_post * self.params.frame_rate
+        pre_pad = int(self.params.atom_ex_pad_pre * self.params.frame_rate)
+        post_pad = int(self.params.atom_ex_pad_post * self.params.frame_rate)
 
         self.phrase.curve = self.phrase.curve[pre_pad:-post_pad]
         # self.phrase.length -= pre_pad + post_pad
