@@ -94,7 +94,11 @@ class Params:
         # reference function for fixing position: pov, energy, weight,
         # first (first to go over thresh), both (must be above thresh)
         # can also be annotations
+<<<<<<< HEAD
         self.fix_pos_ref_func = 'energy'
+=======
+        self.fix_pos_ref_func = 'energy' # None #'annotations'
+>>>>>>> 3eb9f6f55a1fb584ca133656658b5ed4c4e75c11
 
         # else:
         # threshold for seeking peak (ref_func is normalized)
@@ -137,8 +141,12 @@ class Params:
         self.atom_ex_pad_pre = 0.1  # resize before local atom extraction
         self.atom_ex_pad_post = 0.2
 
+<<<<<<< HEAD
         # type of extraction: 'corr', 'wcorr' (default), 'womp' - weighted
         # Orthogonal MP
+=======
+        # type of extraction: 'corr', 'wcorr' (default)
+>>>>>>> 3eb9f6f55a1fb584ca133656658b5ed4c4e75c11
         self.local_type = 'wcorr'
 
         # Atoms' sign: 'positive_only', 'both' (default)
