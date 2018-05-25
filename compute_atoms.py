@@ -1,5 +1,4 @@
-
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland
@@ -17,9 +16,10 @@ import time
 import shutil
 import numpy as np
 
+
 def compute(opts, args):
-    print opts
-    print args
+    print(opts)
+    print(args)
     params = Params()
     paths = Paths(args, params)
 
@@ -34,7 +34,7 @@ def compute(opts, args):
                          params, paths).compute()
 
     model = ModelCreator(phrase, atoms, pitch).compute()
-    print 'Model created in %s seconds' % (time.time() - start_t)
+    print(('Model created in %s seconds' % (time.time() - start_t)))
 
     ModelSaver(model, params, paths).save()
 
@@ -79,5 +79,5 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    print "wcad main"
+    print("wcad main")
     main()

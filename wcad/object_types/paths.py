@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -10,7 +10,8 @@
 #   Aleksandar Gjoreski, October 2015
 #
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser  # Python3
+#from ConfigParser import ConfigParser  # Python2
 import os
 from datetime import datetime
 from time import time

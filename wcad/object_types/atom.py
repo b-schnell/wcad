@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -63,7 +63,7 @@ class Atom:
         if position + curve_len <= wanted_len:
             post_pad = wanted_len - (position + curve_len)
         elif pre_pad > wanted_len:
-            print 'WARNING: position %d > wanted_len %d while padding the atom.' % (position, wanted_len)
+            print('WARNING: position %d > wanted_len %d while padding the atom.' % (position, wanted_len))
             return np.zeros(wanted_len)
         else:
             # Crop the end

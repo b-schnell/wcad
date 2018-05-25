@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -45,12 +45,12 @@ class ModelSaver():
                 basic_entry['theta'] = atoms[a].theta
                 basic_entry['fs'] = atoms[a].fs
                 basic_entry['amp'] = atoms[a].amp
-                basic_entry['pos'] = atoms[a].position
+                basic_entry['pos'] = int(atoms[a].position)
                 basic_entry['length'] = atoms[a].length
-                file.write(unicode(json.dumps(basic_entry, ensure_ascii=False, indent=2)))
-                file.write(unicode('\n'))
+                file.write(str(json.dumps(basic_entry, ensure_ascii=False, indent=2)))
+                file.write(str('\n'))
             else:
-                print "Unknown type of atom:", atoms[a].__class__.__name__
+                print("Unknown type of atom:", atoms[a].__class__.__name__)
 
     def save(self):
         if self.params.save_model:
@@ -69,10 +69,10 @@ class ModelSaver():
                 curve2 = {}
                 curve1['original_f0'] = pitch_log
                 curve2['reconstructed_f0'] = reconstruction
-                f.write(unicode(json.dumps(curve1, ensure_ascii=False)))
-                f.write(unicode('\n'))
-                f.write(unicode(json.dumps(curve2, ensure_ascii=False)))
-                f.write(unicode('\n'))
+                f.write(str(json.dumps(curve1, ensure_ascii=False)))
+                f.write(str('\n'))
+                f.write(str(json.dumps(curve2, ensure_ascii=False)))
+                f.write(str('\n'))
 
                 # For phrase component(s)
                 if phrase.__class__.__name__ == 'LinearAtom':
@@ -84,8 +84,8 @@ class ModelSaver():
                     phrase_entry['amp'] = phrase.amp
                     phrase_entry['pos'] = phrase.position
                     phrase_entry['length'] = phrase.length
-                    f.write(unicode(json.dumps(phrase_entry, ensure_ascii=False, indent=2, sort_keys=False)))
-                    f.write(unicode('\n'))
+                    f.write(str(json.dumps(phrase_entry, ensure_ascii=False, indent=2, sort_keys=False)))
+                    f.write(str('\n'))
                 elif phrase.__class__.__name__ == 'mutantGammaAtom':
                     phrase_entry = {}
                     phrase_entry['atom_type'] = 'mutantGammaAtom'
@@ -95,14 +95,14 @@ class ModelSaver():
                     phrase_entry['amp'] = phrase.amp
                     phrase_entry['pos'] = phrase.position
                     phrase_entry['length'] = phrase.length
-                    f.write(unicode(json.dumps(phrase_entry, ensure_ascii=False, indent=2, sort_keys=False)))
-                    f.write(unicode('\n'))
+                    f.write(str(json.dumps(phrase_entry, ensure_ascii=False, indent=2, sort_keys=False)))
+                    f.write(str('\n'))
                 else:
-                    print "Unknown type of phrase atom:", phrase.__class__.__name__
-                    f.write(unicode("{\n  "))
-                    f.write(unicode("Unknown type of phrase atom:"+phrase.__class__.__name__))
-                    f.write(unicode("\n}"))
-                    f.write(unicode('\n'))
+                    print("Unknown type of phrase atom:", phrase.__class__.__name__)
+                    f.write(str("{\n  "))
+                    f.write(str("Unknown type of phrase atom:"+phrase.__class__.__name__))
+                    f.write(str("\n}"))
+                    f.write(str('\n'))
 
                 self.save_atoms(f)
 

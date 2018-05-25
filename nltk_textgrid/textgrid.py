@@ -150,7 +150,7 @@ class TextGrid(object):
         for tier in self.tiers:
             yield tier
 
-    def next(self):
+    def __next__(self):
         if self.idx == (self.size - 1):
             raise StopIteration
         self.idx += 1
@@ -458,7 +458,7 @@ def demo_text_grid():
 
         for row in tier.simple_transcript:
             (start, end, label) = row
-            print 'row-start:', start, 'row-end', end, 'row-label', label
+            print('row-start:', start, 'row-end', end, 'row-label', label)
 
 # demo_text_grid()
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland
@@ -193,4 +193,4 @@ class Params:
         # Model
         # Save model
         self.save_model = False
-        self.save_atoms = True
+        self.save_atoms = False

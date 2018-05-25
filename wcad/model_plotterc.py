@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -113,7 +113,7 @@ class ModelPlotterc():
         plt.xlim(xmin=0.0, xmax=length)
 
         plt.savefig(filename, bbox_inches=0)  # , format='eps', dpi=1000)
-        print 'Figure saved as ', filename
+        print('Figure saved as ', filename)
 
         plt.show()
 
@@ -148,9 +148,9 @@ class ModelPlotterc():
 
         x_start = t[pitch_max_in]
         x_end = t[pitch_max_out]
-        print pitch_max_in, pitch_max_out
-        print 'x_start = ', x_start
-        print 'x_end = ', x_end
+        print(pitch_max_in, pitch_max_out)
+        print('x_start = ', x_start)
+        print('x_end = ', x_end)
 
         # if there are annotations load them
         if params.plot_textgrids:
@@ -334,7 +334,7 @@ class ModelPlotterc():
         if params.save_plot:
             savefile = self.paths.figure + '.png'
             plt.savefig(savefile, bbox_inches=0)    # , format='eps', dpi=1000)
-            print 'Figure saved as ', savefile
+            print('Figure saved as ', savefile)
 
         if params.show_plot:
             plt.show()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -23,9 +23,11 @@ class EnergyComputer:
     #  frame done without a for loop
     @staticmethod
     def frame(a, size=512, period=256, pad=True):
+        size = int(size)
+        period = int(period)
         if pad:
             # This ensures that frames are aligned in the centre
-            a = np.pad(a, (size/2, size/2), 'edge')
+            a = np.pad(a, (size//2, size//2), 'edge')  # / is floating point division in python3, // is integral division.
 
         n_frames = (a.size - (size-period)) // period
         indf = period * np.arange(n_frames)

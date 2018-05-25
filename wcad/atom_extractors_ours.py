@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -88,7 +88,7 @@ class OurAtomExtractor():
         n_atoms = f0_diff_len//20 if self.params.num_atoms is None else self.params.num_atoms
 
         atoms = []
-        print 'Extracting atoms in max ', n_atoms, ' iterations '
+        print('Extracting atoms in max ', n_atoms, ' iterations ')
         start_time = time.time()
 
         for iteration in range(n_atoms):
@@ -116,8 +116,8 @@ class OurAtomExtractor():
             f0_diff -= new_atom_padded
 
             if self.params.min_atom_amp and abs(max_corr_atom.amp) < self.params.min_atom_amp:
-                print 'Atom amplitude is %f bellow %f. Not appending this one.' \
-                      % (max_corr_atom.amp, self.params.min_atom_amp)
+                print('Atom amplitude is %f bellow %f. Not appending this one.' \
+                      % (max_corr_atom.amp, self.params.min_atom_amp))
                 continue
 
             atoms.append(new_atom)
@@ -132,12 +132,12 @@ class OurAtomExtractor():
             # plt.plot(f0_diff, 'k')
             # plt.show()
 
-            print 'iteration: ', iteration, 'atom.theta: ', max_corr_atom.theta, 'pos: ', \
-                max_corr_atom.position, 'amp: ', max_corr_atom.amp
+            print('iteration: ', iteration, 'atom.theta: ', max_corr_atom.theta, 'pos: ', \
+                max_corr_atom.position, 'amp: ', max_corr_atom.amp)
 
             # Check if stopping condition is reached
             if np.max(np.fabs(f0_diff)) < self.params.min_res_amp:
-                print 'Residue amplitude bellow %f. Stopping.' % self.params.min_res_amp
+                print('Residue amplitude bellow %f. Stopping.' % self.params.min_res_amp)
                 break
 
             if self.params.wcorr_limit is not None:
@@ -151,11 +151,11 @@ class OurAtomExtractor():
                 # compute wcorr
                 wcorr = SignalComparer(reconstruction, self.pitch.f0_log, self.pitch.weight).simple_norm_wcorr()
                 if wcorr >= self.params.wcorr_limit:
-                    print 'Reached wcorr greater than %f. Stopping.' % self.params.wcorr_limit
+                    print('Reached wcorr greater than %f. Stopping.' % self.params.wcorr_limit)
                     break
             # end for i in range(n_atoms)
 
-        print "Extracted %d atoms in %s seconds" % (len(atoms), time.time() - start_time)
+        print("Extracted %d atoms in %s seconds" % (len(atoms), time.time() - start_time))
 
         self.deextrapolate(atoms)
         return atoms
@@ -185,14 +185,14 @@ class OurWeightedAtomExtractor(OurAtomExtractor):
 
             f0_diff[:start] = 0
             weight[:start] = 0
-            f0_diff[end + self.params.fix_pos_ref_func_end_s_ext:] = 0
-            weight[end + self.params.fix_pos_ref_func_end_s_ext:] = 0
+            f0_diff[end + int(self.params.fix_pos_ref_func_end_s_ext):] = 0
+            weight[end + int(self.params.fix_pos_ref_func_end_s_ext):] = 0
 
         # Stopping parameters
         n_atoms = f0_diff_len//20 if self.params.num_atoms is None else self.params.num_atoms
 
         atoms = []
-        print 'Extracting atoms in max ', n_atoms, 'iterations.'
+        print('Extracting atoms in max ', n_atoms, 'iterations.')
         start_time = time.time()
 
         for iteration in range(n_atoms):
@@ -211,7 +211,7 @@ class OurWeightedAtomExtractor(OurAtomExtractor):
                 if self.params.mul_wcorr_corr:
                     weighted_corr = weighted_corr * corr
 
-                wcorr_ind = np.argmax(np.abs(weighted_corr))  # index of maximum correlation
+                wcorr_ind = int(np.argmax(np.abs(weighted_corr)))  # index of maximum correlation
                 atom_wcorr = weighted_corr[wcorr_ind]
 
                 if max_wcorr is None or np.abs(atom_wcorr) > np.abs(max_wcorr):
@@ -233,8 +233,8 @@ class OurWeightedAtomExtractor(OurAtomExtractor):
             f0_diff -= new_atom_padded
 
             if self.params.min_atom_amp and abs(max_wcorr_atom.amp) < self.params.min_atom_amp:
-                print 'Atom amplitude is %f bellow %f. Not appending this one.' \
-                          % (max_wcorr_atom.amp, self.params.min_atom_amp)
+                print('Atom amplitude is %f bellow %f. Not appending this one.' \
+                          % (max_wcorr_atom.amp, self.params.min_atom_amp))
                 if self.params.stop_at_first_min_atom is True:
                     break
                 else:
@@ -250,18 +250,18 @@ class OurWeightedAtomExtractor(OurAtomExtractor):
                     reconstruction += padded_curve
                 # compute wcorr
                 wcorr = SignalComparer(reconstruction, self.pitch.f0_log, self.pitch.weight).simple_norm_wcorr()
-                print 'wCorr before stop: %f.' % wcorr
-                print 'Possible deadlock. Stopping.'
+                print('wCorr before stop: %f.' % wcorr)
+                print('Possible deadlock. Stopping.')
                 break
 
             atoms.append(new_atom)
 
-            print 'iteration: ', iteration, 'atom.theta: ', max_wcorr_atom.theta, 'pos: ', \
-                max_wcorr_atom.position, 'amp: ', max_wcorr_atom.amp, 'wcorr_ind:', wcorr_ind
+            print('iteration: ', iteration, 'atom.theta: ', max_wcorr_atom.theta, 'pos: ', \
+                max_wcorr_atom.position, 'amp: ', max_wcorr_atom.amp, 'wcorr_ind:', wcorr_ind)
 
             # Check if stopping condition is reached
             if self.params.min_res_amp and np.max(np.fabs(f0_diff_w)) < self.params.min_res_amp:
-                print 'Residue amplitude bellow %f. Stopping.' % self.params.min_res_amp
+                print('Residue amplitude bellow %f. Stopping.' % self.params.min_res_amp)
                 break
 
             if self.params.wcorr_limit is not None:
@@ -275,13 +275,13 @@ class OurWeightedAtomExtractor(OurAtomExtractor):
                 # compute wcorr
                 wcorr = SignalComparer(reconstruction, self.pitch.f0_log, self.pitch.weight).simple_norm_wcorr()
                 if wcorr >= self.params.wcorr_limit:
-                    print 'Reached wcorr of %f, greater than %f. Stopping.' \
-                          % (wcorr, self.params.wcorr_limit)
+                    print('Reached wcorr of %f, greater than %f. Stopping.' \
+                          % (wcorr, self.params.wcorr_limit))
                     break
 
             # end for i in range(n_atoms)
 
-        print "Extracted %d atoms in %s seconds" % (len(atoms), time.time() - start_time)
+        print("Extracted %d atoms in %s seconds" % (len(atoms), time.time() - start_time))
 
         # self.deextrapolate(atoms)
         return atoms
@@ -328,7 +328,7 @@ class OMPWeightedAtomExtractor(OurAtomExtractor):
         n_atoms = f0_diff_len//20 if self.params.num_atoms is None else self.params.num_atoms
 
         atoms = []
-        print 'Extracting atoms in max ', n_atoms, 'iterations.'
+        print('Extracting atoms in max ', n_atoms, 'iterations.')
         start_time = time.time()
 
         f0_nophrase = np.copy(f0_diff)
@@ -349,7 +349,7 @@ class OMPWeightedAtomExtractor(OurAtomExtractor):
                 if self.params.mul_wcorr_corr:
                     weighted_corr = weighted_corr * corr
 
-                wcorr_ind = np.argmax(np.abs(weighted_corr))  # index of maximum correlation
+                wcorr_ind = int(np.argmax(np.abs(weighted_corr)))  # index of maximum correlation
                 atom_wcorr = weighted_corr[wcorr_ind]
 
                 if max_wcorr is None or np.abs(atom_wcorr) > np.abs(max_wcorr):
@@ -364,9 +364,9 @@ class OMPWeightedAtomExtractor(OurAtomExtractor):
 
             # Check possible deadlock
             if self.params.break_deadlock and len(atoms) > 0 and atoms[-1].position == max_wcorr_atom.position:
-                print 'Possible deadlock. Stopping.'
-                print 'max_wcorr was', max_wcorr, '| max_wcorr_index was', max_wcorr_index, \
-                    '| max_wcorr_atom.position was', max_wcorr_atom.position
+                print('Possible deadlock. Stopping.')
+                print('max_wcorr was', max_wcorr, '| max_wcorr_index was', max_wcorr_index, \
+                    '| max_wcorr_atom.position was', max_wcorr_atom.position)
                 break
 
             # Compute old amplitude
@@ -402,19 +402,19 @@ class OMPWeightedAtomExtractor(OurAtomExtractor):
             # wcorrs.append(wcorr)
 
             if self.params.min_atom_amp and abs(max_wcorr_atom.amp) < self.params.min_atom_amp:
-                print 'Atom amplitude is %f bellow %f. Not appending this one.' \
-                          % (max_wcorr_atom.amp, self.params.min_atom_amp)
+                print('Atom amplitude is %f bellow %f. Not appending this one.' \
+                          % (max_wcorr_atom.amp, self.params.min_atom_amp))
                 if self.params.stop_at_first_min_atom is True:
                     break
                 else:
                     continue
 
-            print 'iteration: ', iteration, 'atom.theta: ', max_wcorr_atom.theta, 'pos: ', \
-                max_wcorr_atom.position, 'amp: ', max_wcorr_atom.amp, 'wcorr_ind:', wcorr_ind
+            print('iteration: ', iteration, 'atom.theta: ', max_wcorr_atom.theta, 'pos: ', \
+                max_wcorr_atom.position, 'amp: ', max_wcorr_atom.amp, 'wcorr_ind:', wcorr_ind)
 
             # Check if stopping condition is reached
             if self.params.min_res_amp and np.max(np.fabs(f0_diff_w)) < self.params.min_res_amp:
-                print 'Residue amplitude bellow %f. Stopping.' % self.params.min_res_amp
+                print('Residue amplitude bellow %f. Stopping.' % self.params.min_res_amp)
                 break
 
             if self.params.wcorr_limit is not None:
@@ -428,12 +428,12 @@ class OMPWeightedAtomExtractor(OurAtomExtractor):
                 # compute wcorr
                 wcorr = SignalComparer(reconstruction, self.pitch.f0_log, self.pitch.weight).simple_norm_wcorr()
                 if wcorr >= self.params.wcorr_limit:
-                    print 'Reached wcorr of %f, greater than %f. Stopping.' \
-                          % (wcorr, self.params.wcorr_limit)
+                    print('Reached wcorr of %f, greater than %f. Stopping.' \
+                          % (wcorr, self.params.wcorr_limit))
                     break
 
             # end for i in range(n_atoms)
 
-        print "Extracted %d atoms in %s seconds" % (len(atoms), time.time() - start_time)
+        print("Extracted %d atoms in %s seconds" % (len(atoms), time.time() - start_time))
         # self.deextrapolate(atoms)
         return atoms

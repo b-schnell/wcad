@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright 2015 by Ss Cyril and Methodius University in Skopje, Macedonia
 # Copyright 2015 by Idiap Research Institute in Martigny, Switzerland 
@@ -10,7 +10,8 @@
 #   Aleksandar Gjoreski, October 2015
 #
 
-from __future__ import division
+
+from __future__ import print_function
 import time
 
 import matplotlib.pyplot as plt
@@ -23,7 +24,6 @@ from .object_types.pitch_curve import *
 from .object_types.wave import *
 from .signal_comparer import *
 from nltk_textgrid.textgrid import *
-
 
 class MultiphraseExtractor:
     def __init__(self, pitch, wave, params, paths):
@@ -406,7 +406,7 @@ class FixPosPhraseExtractor:
 
         # find maximum pitch within given time after pov_norm goes above 0.5 - this is where we will place the atom
         if self.params.fix_pos_ref_func == 'annotations':
-            print "fix annotations"
+            print("fix annotations")
             annotations_file = self.paths.textgrid_folder + self.wave.basename + '.TextGrid'
             tiers = TextGrid(open(annotations_file).read())
             for tier in tiers:
@@ -416,12 +416,12 @@ class FixPosPhraseExtractor:
                             (start, end, label) = row
                             pitch_max_in = np.float(end)  # in time
                             pitch_max_in = int(pitch_max_in * self.params.frame_rate)  # in samples
-                            print 'pitch_max_in =', pitch_max_in
+                            print('pitch_max_in =', pitch_max_in)
                         if i == tier.size-1:
                             (start, end, label) = row
                             pitch_max_out = np.float(start)  # in time
                             pitch_max_out = int(pitch_max_out * self.params.frame_rate)  # in samples
-                            print 'pitch_max_out =', pitch_max_out
+                            print('pitch_max_out =', pitch_max_out)
 
         elif self.params.fix_pos_ref_func not in {'first', 'both'}:
             if self.params.fix_pos_ref_func == 'pov':
@@ -459,7 +459,7 @@ class FixPosPhraseExtractor:
                 pitch_max_in1 += ref_func_start
             else:
                 pitch_max_in1 = ref_func_start
-            print 'Energy start in = ', pitch_max_in1
+            print('Energy start in = ', pitch_max_in1)
 
             pitch_max_out1 = np.where(ref_func_norm > self.params.fix_pos_ref_func_end_th)[0]
             pitch_max_out1 = int(pitch_max_out1[-1])
@@ -476,7 +476,7 @@ class FixPosPhraseExtractor:
                 pitch_max_in2 += ref_func_start
             else:
                 pitch_max_in2 = ref_func_start
-            print 'Pov start in = ', pitch_max_in2
+            print('Pov start in = ', pitch_max_in2)
 
             pitch_max_out2 = np.where(ref_func_norm > self.params.fix_pos_ref_func_end_th)[0]
             pitch_max_out2 = int(pitch_max_out2[-1])
@@ -500,9 +500,9 @@ class FixPosPhraseExtractor:
                 f0_log = f0_log[: phrase_max_out]
                 weight = weight[: phrase_max_out]
 
-        print "Iterating gammas ",
+        print("Iterating gammas ", end=' ')
         for atom in dictionary:
-            print "#",
+            print("#", end=' ')
             sys.stdout.flush()   # don't buffer output, print hash immediately
 
             atom_max_in = np.argmax(atom.curve)  # index of maximum element in atom
@@ -535,13 +535,13 @@ class FixPosPhraseExtractor:
 
             ###################################
 
-        print "done in %s seconds" % (time.time() - start_time)
+        print("done in %s seconds" % (time.time() - start_time))
 
-        print "max(wCorr) = %f" % max_wcorr
+        print("max(wCorr) = %f" % max_wcorr)
 
         f0_log = self.pitch.f0_log
-        print 'phrase atom theta is ', max_wcorr_atom.theta
-        print 'phrase atom position is ', max_wcorr_atom.position
+        print('phrase atom theta is ', max_wcorr_atom.theta)
+        print('phrase atom position is ', max_wcorr_atom.position)
 
         phrasecomp = max_wcorr_atom.get_padded_curve(len(f0_log))
 
@@ -556,7 +556,7 @@ class FixPosPhraseExtractor:
             phrasecomp /= linalg.norm(phrasecomp)
             phrasecomp *= np.dot(phrasecomp, f0_log)
 
-        print pitch_max_in, pitch_max_out
+        print(pitch_max_in, pitch_max_out)
         phrase = Atom(phrasecomp, self.params.frame_rate,
                       pitch_max_in=pitch_max_in, pitch_max_out=pitch_max_out, phrase_max_out=phrase_max_out)
 

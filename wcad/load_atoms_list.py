@@ -1,7 +1,7 @@
 import sys
 import logging
 import json
-from object_types.atom import GammaAtom
+from .object_types.atom import GammaAtom
 
 def main( file_name ):
     # Read atoms produced by wcad.
